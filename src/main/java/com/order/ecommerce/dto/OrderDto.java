@@ -1,46 +1,48 @@
 package com.order.ecommerce.dto;
 
+import java.util.List;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 public class OrderDto {
 
-    @NotNull
-    private final String customerId;
+	@NotBlank(message = "customer id cannot be null or empty")
+    private  String customerId;
 
-    private final double subTotal;
+    private  double subTotal;
 
-    private final double totalAmt;
+    private  double totalAmt;
 
-    private final double tax;
+    private  double tax;
 
-    private final double shippingCharges;
+    private  double shippingCharges;
 
-    @NotNull
-    private final String title;
+    @NotBlank(message = "title cannot cannot be null or empty")
+    private  String title;
 
-    private final String shippingMode;
+    private  String shippingMode;
 
-    private final double amount;
+    private  double amount;
 
-    @NotNull
-    private final String paymentMode;
+    @NotBlank(message = "payment mode cannot be null or empty")
+    private  String paymentMode;
 
-    @NotNull
-    private final AddressDto billingAddress;
+    @NotNull(message = "billing address cannot be null")
+    private  AddressDto billingAddress;
 
-    private final AddressDto shippingAddress;
+    private  AddressDto shippingAddress;
 
-    @NotNull
-    private final List<OrderItemDto> orderItems;
+    @NotBlank(message = "order items cannot be null or empty")
+    private  List<OrderItemDto> orderItems;
 
-    @NotNull
-    private final String orderStatus;
+    @NotBlank(message = "order status cannot be null or empty")
+    private  String orderStatus;
 }

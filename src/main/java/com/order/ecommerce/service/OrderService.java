@@ -1,27 +1,37 @@
 package com.order.ecommerce.service;
 
-import com.order.ecommerce.dto.OrderDto;
-import com.order.ecommerce.dto.OrderItemDto;
-import com.order.ecommerce.dto.OrderResponseDto;
-import com.order.ecommerce.dto.AddressDto;
-import com.order.ecommerce.dto.ProductDto;
-import com.order.ecommerce.entity.*;
-import com.order.ecommerce.enums.OrderStatus;
-import com.order.ecommerce.enums.PaymentStatus;
-import com.order.ecommerce.mapper.OrderDetailsMapper;
-import com.order.ecommerce.repository.*;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.mapstruct.factory.Mappers;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
+
+import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Service;
+
+import com.order.ecommerce.dto.AddressDto;
+import com.order.ecommerce.dto.OrderDto;
+import com.order.ecommerce.dto.OrderItemDto;
+import com.order.ecommerce.dto.OrderResponseDto;
+import com.order.ecommerce.dto.ProductDto;
+import com.order.ecommerce.entity.Address;
+import com.order.ecommerce.entity.Order;
+import com.order.ecommerce.entity.OrderItem;
+import com.order.ecommerce.entity.OrderItemPk;
+import com.order.ecommerce.entity.Payment;
+import com.order.ecommerce.enums.OrderStatus;
+import com.order.ecommerce.enums.PaymentStatus;
+import com.order.ecommerce.mapper.OrderDetailsMapper;
+import com.order.ecommerce.repository.IAddressRepository;
+import com.order.ecommerce.repository.IOrderItemRepository;
+import com.order.ecommerce.repository.IOrderRepository;
+import com.order.ecommerce.repository.IPaymentRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -33,37 +43,36 @@ public class OrderService implements IOrderService {
     private final IPaymentRepository paymentRepository;
     private final IAddressRepository addressRepository;
 
-    private final IProductService productService;
+    private final ProductService productService;
     private final OrderDetailsMapper orderDetailsMapper = Mappers.getMapper(OrderDetailsMapper.class);
 
     @Override
     @Transactional
-    public OrderResponseDto createOrder(OrderDto orderDto) {
-        log.info("Creating Order for customer = {}", orderDto.getCustomerId());
+	public OrderResponseDto createOrder(OrderDto orderDto) {
+		log.info("Creating Order for customer = {}", orderDto.getCustomerId());
 
-        log.info("Verifying all products exists before generating order");
-        List<String> productIds = orderDto.getOrderItems().stream().map(orderItemDto -> orderItemDto.getProductId()).distinct().collect(Collectors.toList());
-        List<ProductDto> products = productService.findAllById(productIds);
-        if (products == null || products.isEmpty() || products.size() != productIds.size()) {
-            log.info("Not all product(s) exist, failed to create order!");
-            return null;
-        }
+		log.info("Verifying all products exists before generating order");
+		List<String> productIds = orderDto.getOrderItems().stream().map(orderItemDto -> orderItemDto.getProductId())
+				.distinct().collect(Collectors.toList());
+		List<ProductDto> products = productService.findAllById(productIds);
+		if (products == null || products.isEmpty() || products.size() != productIds.size()) {
+			log.info("Not all product(s) exist, failed to create order!");
+			return null;
+		}
 
-        Order order = generateOrder(orderDto);
-        log.info("Generated order for orderId = {}", order.getOrderId());
+		Order order = generateOrder(orderDto);
+		log.info("Generated order for orderId = {}", order.getOrderId());
 
-        Order savedOrder = orderRepository.save(order);
-        String savedOrderId = savedOrder.getOrderId();
-        List<OrderItem> orderItemList = buildOrderItems(orderDto.getOrderItems(), savedOrderId);
-        orderItemRepository.saveAll(orderItemList);
+		Order savedOrder = orderRepository.save(order);
+		String savedOrderId = savedOrder.getOrderId();
+		List<OrderItem> orderItemList = buildOrderItems(orderDto.getOrderItems(), savedOrderId);
+		orderItemRepository.saveAll(orderItemList);
 
-        log.info("Successfully saved order & order items with id = {} for customer = {} on {}", savedOrder.getOrderId(),  savedOrder.getCustomerId(), savedOrder.getCreatedAt());
+		log.info("Successfully saved order & order items with id = {} for customer = {} on {}", savedOrder.getOrderId(),
+				savedOrder.getCustomerId(), savedOrder.getCreatedAt());
 
-        return OrderResponseDto.builder()
-                .orderId(savedOrderId)
-                .orderStatus(savedOrder.getOrderStatus())
-                .build();
-    }
+		return OrderResponseDto.builder().orderId(savedOrderId).orderStatus(savedOrder.getOrderStatus()).build();
+	}
 
     @Override
     public OrderDto findOrderById(String orderId) {
@@ -86,8 +95,11 @@ public class OrderService implements IOrderService {
             log.info("Cannot update status for orderId = {}", orderId);
             return;
         }
+       // List<OrderStatus> orderStatusList =null;
 
-        List<OrderStatus> orderStatusList = Arrays.stream(OrderStatus.values()).filter(orderStatus -> orderStatus.toString().equalsIgnoreCase(status)).toList();
+      List<OrderStatus> orderStatusList = Arrays.stream(OrderStatus.values())
+        		.filter(orderStatus -> orderStatus.toString().equalsIgnoreCase(status))
+        		.collect(Collectors.toList());
         if (orderStatusList.isEmpty()) {
             log.error("Invalid status = {}, failed to update order status for id = {}", status, orderId);
             return;

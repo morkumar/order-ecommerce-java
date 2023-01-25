@@ -14,7 +14,9 @@ import java.io.Serializable;
 @Table(name = "ecommerce_order_item")
 public class OrderItem implements Serializable {
 
-    @EmbeddedId
+	private static final long serialVersionUID = 156335954876406342L;
+
+	@EmbeddedId
     private OrderItemPk orderItemPk;
 
     @ManyToOne

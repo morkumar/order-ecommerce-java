@@ -1,28 +1,29 @@
 package com.order.ecommerce.dto;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
 @AllArgsConstructor
 public class AddressDto {
 
-    @NotNull
+    @NotBlank(message = "address1 cannot be null or empty")
     private final String address1;
-    @NotNull
+    @NotBlank(message = "address2 cannot be null or empty")
     private final String address2;
-    @NotNull
+    @NotBlank(message = "city cannot be null or empty")
     private final String city;
-    @NotNull
+    @NotBlank(message = "state cannot be null or empty")
     private final String state;
-    @NotNull
+    @NotBlank(message = "zip cannot be null or empty")
     private final String zip;
-    @NotNull
+    @NotBlank(message = "email cannot be null or empty")
     private final String email;
-    @NotNull
+    @NotBlank(message = "phone cannot be null or empty")
     private final String phone;
+    
 }

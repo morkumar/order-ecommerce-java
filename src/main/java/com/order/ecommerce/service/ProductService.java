@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -49,7 +50,7 @@ public class ProductService implements IProductService {
     public List<ProductDto> findAllById(List<String> ids) {
         log.info("Finding products for ids = {}", ids);
         List<Product> productList = (List<Product>) productRepository.findAllById(ids);
-        if (productList == null || productList.isEmpty()) {
+        if ( CollectionUtils.isEmpty(productList)) {
             log.info("No product(s) found for ids = {}", ids);
             return null;
         }
