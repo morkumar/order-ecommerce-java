@@ -17,7 +17,9 @@ import java.util.List;
 @Table(name = "ecommerce_product")
 public class Product implements Serializable {
 
-    @Id
+  	private static final long serialVersionUID = 943762440113570326L;
+
+	@Id
     @Column(name = "product_id", nullable = false, unique = true)
     private String productId;
 

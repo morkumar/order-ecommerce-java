@@ -15,7 +15,9 @@ import java.time.LocalDate;
 @Table(name = "ecommerce_payment")
 public class Payment implements Serializable {
 
-    @Id
+	private static final long serialVersionUID = -6621449572247777228L;
+
+	@Id
     @Column(name = "payment_id", nullable = false, unique = true)
     private String paymentId;
 

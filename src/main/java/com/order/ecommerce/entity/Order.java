@@ -1,18 +1,29 @@
 package com.order.ecommerce.entity;
 
-import lombok.Data;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "ecommerce_order")
 public class Order implements Serializable {
 
-    @Id
+	private static final long serialVersionUID = 7740790071830453518L;
+
+	@Id
     @Column(name = "order_id", nullable = false, unique = true)
     private String orderId;
 

@@ -16,7 +16,9 @@ import java.time.LocalDate;
 @Table(name = "ecommerce_address")
 public class Address implements Serializable {
 
-    @Id
+	private static final long serialVersionUID = -1584427202240215377L;
+
+	@Id
     @Column(name = "address_id", nullable = false, unique = true)
     private String addressId;
 

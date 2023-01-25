@@ -1,12 +1,13 @@
 package com.order.ecommerce.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.io.Serializable;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Embeddable
@@ -14,9 +15,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class OrderItemPk implements Serializable {
 
-    private static long serialVersionUID = 5074947294298476737L;
+	private static final long serialVersionUID = 2218936744700948184L;
 
-    @Column(name = "product_id", nullable = false)
+	@Column(name = "product_id", nullable = false)
     private String productId;
 
     @Column(name = "order_id", nullable = false)

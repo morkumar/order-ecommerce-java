@@ -1,25 +1,28 @@
 package com.order.ecommerce.dto;
 
+import javax.validation.constraints.NotBlank;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-
 @Data
 @Builder
+@AllArgsConstructor
 public class ProductDto {
 
-    @NotNull
+    @NotBlank(message = "Product Id cannot be null or empty")
     private final String productId;
 
-    @NotNull
+    @NotBlank(message = "Product sku cannot be null or empty")
     private final String sku;
 
-    @NotNull
+    @NotBlank(message = "Product title cannot be null")
     private final String title;
 
-    @NotNull
+    @NotBlank(message = "Product description cannot be null or empty")
     private final String description;
 
     private final double price;
+
 }
